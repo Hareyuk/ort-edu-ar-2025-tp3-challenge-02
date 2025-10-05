@@ -111,61 +111,70 @@ fun FavoriteItem(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(80.dp)
-                .padding(16.dp),
+                .height(80.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // Number circle
-            Box(
+            // 80% width container for textual content
+            Row(
                 modifier = Modifier
-                    .size(32.dp)
-                    .background(
-                        color = Color(0xFFB85A3E),
-                        shape = CircleShape
-                    ),
-                contentAlignment = Alignment.Center
-            ) {
-                Text(
-                    text = index.toString(),
-                    color = Color.White,
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight.Bold
-                )
-            }
-
-            Spacer(modifier = Modifier.width(12.dp))
-
-            // Product info
-            Column(
-                modifier = Modifier.weight(1f),
-                verticalArrangement = Arrangement.Center
-            ) {
-                Text(
-                    text = product.name,
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.Medium,
-                    color = Color.Black
-                )
-                Text(
-                    text = "${product.price} $",
-                    fontSize = 14.sp,
-                    color = Color(0xFF666666),
-                    modifier = Modifier.padding(top = 2.dp)
-                )
-            }
-
-            Spacer(modifier = Modifier.width(12.dp))
-
-            // Product image - covering full height and width of its allocated space
-            Image(
-                painter = painterResource(id = product.image),
-                contentDescription = product.name,
-                modifier = Modifier
-                    .width(80.dp)
+                    .weight(0.8f)
                     .fillMaxHeight()
-                    .clip(RoundedCornerShape(8.dp)),
-                contentScale = ContentScale.Crop
-            )
+                    .padding(start = 16.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                // Number circle
+                Box(
+                    modifier = Modifier
+                        .size(32.dp)
+                        .background(
+                            color = Color(0xFFB85A3E),
+                            shape = CircleShape
+                        ),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = index.toString(),
+                        color = Color.White,
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+
+                Spacer(modifier = Modifier.width(12.dp))
+
+                // Product info
+                Column(
+                    modifier = Modifier.weight(1f),
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    Text(
+                        text = product.name,
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.Medium,
+                        color = Color.Black
+                    )
+                    Text(
+                        text = "${product.price} $",
+                        fontSize = 14.sp,
+                        color = Color(0xFF666666),
+                        modifier = Modifier.padding(top = 2.dp)
+                    )
+                }
+            }
+
+            // 20% width container for image - no padding, fills all space
+            Box(
+                modifier = Modifier.weight(0.2f)
+            ) {
+                Image(
+                    painter = painterResource(id = product.image),
+                    contentDescription = product.name,
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .clip(RoundedCornerShape(topEnd = 12.dp, bottomEnd = 12.dp)),
+                    contentScale = ContentScale.Crop
+                )
+            }
         }
     }
 }
