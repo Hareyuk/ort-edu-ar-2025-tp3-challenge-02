@@ -13,12 +13,16 @@ import ort.argentina.yatay.tp3.challenge2.ui.screens.SearchScreen
 import ort.argentina.yatay.tp3.challenge2.ui.screens.StoreScreen
 import ort.argentina.yatay.tp3.challenge2.ui.screens.CartScreen
 import ort.argentina.yatay.tp3.challenge2.ui.screens.ProfileScreen
+import ort.argentina.yatay.tp3.challenge2.ui.screens.SettingsScreen
+import ort.argentina.yatay.tp3.challenge2.ui.screens.FavoritesScreen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AppNavigation() {
     var selectedTab by remember { mutableStateOf(0) }
     var showMenu by remember { mutableStateOf(false) }
+    var showSettings by remember { mutableStateOf(false) }
+    var showFavorites by remember { mutableStateOf(false) }
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -28,19 +32,27 @@ fun AppNavigation() {
             )
         },
         bottomBar = {
-            BottomNavigationBar(
-                selectedTab = selectedTab,
-                onTabSelected = { selectedTab = it }
-            )
+            if (!showSettings && !showFavorites) {
+                BottomNavigationBar(
+                    selectedTab = selectedTab,
+                    onTabSelected = { selectedTab = it }
+                )
+            }
         }
     ) { paddingValues ->
-        // Navegación entre pantallas basada en el tab seleccionado
-        when (selectedTab) {
-            0 -> HomeScreen(paddingValues)
-            1 -> SearchScreen(paddingValues)
-            2 -> StoreScreen(paddingValues)
-            3 -> CartScreen(paddingValues)
-            4 -> ProfileScreen(paddingValues)
+        // Navegación entre pantallas
+        when {
+            showSettings -> SettingsScreen(paddingValues)
+            showFavorites -> FavoritesScreen(paddingValues)
+            else -> {
+                when (selectedTab) {
+                    0 -> HomeScreen(paddingValues)
+                    1 -> SearchScreen(paddingValues)
+                    2 -> StoreScreen(paddingValues)
+                    3 -> CartScreen(paddingValues)
+                    4 -> ProfileScreen(paddingValues)
+                }
+            }
         }
 
         // Mostrar menú lateral si está activado
@@ -55,15 +67,24 @@ fun AppNavigation() {
                 MenuContent(
                     onDismiss = { showMenu = false },
                     onMenuItemClick = { menuItem ->
-                        // TODO: Implementar navegación del menú
                         when (menuItem) {
-                            "shop_list" -> selectedTab = 0
-                            "favourites" -> {
-                                // TODO: Navegar a favoritos
+                            "shop_list" -> {
+                                selectedTab = 0
+                                showSettings = false
+                                showFavorites = false
                             }
-                            "profile" -> selectedTab = 4
+                            "favourites" -> {
+                                showFavorites = true
+                                showSettings = false
+                            }
+                            "profile" -> {
+                                selectedTab = 4
+                                showSettings = false
+                                showFavorites = false
+                            }
                             "settings" -> {
-                                // TODO: Navegar a configuración
+                                showSettings = true
+                                showFavorites = false
                             }
                         }
                         showMenu = false

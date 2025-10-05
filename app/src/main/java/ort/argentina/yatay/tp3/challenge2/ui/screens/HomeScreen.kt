@@ -11,30 +11,35 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import ort.argentina.yatay.tp3.challenge2.R
 import ort.argentina.yatay.tp3.challenge2.ui.components.ProductCard
+import ort.argentina.yatay.tp3.challenge2.data.FavoritesManager
 
 @Composable
 fun HomeScreen(paddingValues: PaddingValues) {
     // Lista de productos de ejemplo
     val products = listOf(
         ProductData(
+            id = 1,
             image = R.drawable.placeholder_shoes,
             name = "Leather boots",
             price = "27,5",
             description = "Great warm shoes from the artificial leather. You can buy this model only in our shop"
         ),
         ProductData(
+            id = 2,
             image = R.drawable.placeholder_shoes,
             name = "Running Sneakers",
             price = "45,0",
             description = "Comfortable running shoes perfect for daily exercise and casual wear"
         ),
         ProductData(
+            id = 3,
             image = R.drawable.placeholder_shoes,
             name = "Classic Oxfords",
             price = "89,9",
             description = "Elegant leather shoes suitable for formal occasions and business meetings"
         ),
         ProductData(
+            id = 4,
             image = R.drawable.placeholder_shoes,
             name = "Canvas Shoes",
             price = "32,0",
@@ -56,7 +61,7 @@ fun HomeScreen(paddingValues: PaddingValues) {
                 price = product.price,
                 description = product.description,
                 onAddToFavourite = {
-                    // TODO: Implementar lógica de favoritos
+                    FavoritesManager.addToFavorites(product)
                 },
                 onBuy = {
                     // TODO: Implementar lógica de compra
@@ -68,6 +73,7 @@ fun HomeScreen(paddingValues: PaddingValues) {
 
 // Data class para los productos
 data class ProductData(
+    val id: Int,
     val image: Int,
     val name: String,
     val price: String,
