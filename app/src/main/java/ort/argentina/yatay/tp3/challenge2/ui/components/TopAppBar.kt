@@ -8,13 +8,22 @@ import ort.argentina.yatay.tp3.challenge2.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ShopListTopAppBar(onMenuClick: () -> Unit) {
+fun ShopListTopAppBar(
+    onMenuClick: () -> Unit,
+    showBackButton: Boolean = false,
+    onBackClick: () -> Unit = {}
+) {
     CenterAlignedTopAppBar(
         navigationIcon = {
-            IconButton(onClick = onMenuClick) {
+            IconButton(onClick = if (showBackButton) onBackClick else onMenuClick) {
                 Icon(
-                    painter = painterResource(id = R.drawable.baseline_menu_24),
-                    contentDescription = "Menú"
+                    painter = painterResource(
+                        id = if (showBackButton)
+                            R.drawable.outline_arrow_back_24
+                        else
+                            R.drawable.baseline_menu_24
+                    ),
+                    contentDescription = if (showBackButton) "Regresar" else "Menú"
                 )
             }
         },

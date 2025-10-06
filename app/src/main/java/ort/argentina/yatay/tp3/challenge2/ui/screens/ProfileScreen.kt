@@ -3,6 +3,8 @@ package ort.argentina.yatay.tp3.challenge2.ui.screens
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
@@ -20,39 +22,63 @@ import androidx.compose.ui.unit.sp
 import ort.argentina.yatay.tp3.challenge2.R
 
 @Composable
-fun ProfileScreen(
+fun ProfileScreen( //Valores por defaultq ue indiqué que muestre en caso de no recibir información de afuera
     paddingValues: PaddingValues,
     userName: String = "User",
     userJob: String = "User's job",
     email: String = "xxx@gmail.com",
     phoneNumber: String = "+548312315",
     website: String = "www.google.com",
-    password: String = "xxxxxxxxxxxx"
+    password: String = "xxxxxxxxxxxx",
+    onEditProfile: () -> Unit = {}
 ) {
     Column(
         modifier = Modifier
             .fillMaxSize()
             .background(Color(0xFFF5F5F5))
             .padding(paddingValues)
+            .verticalScroll(rememberScrollState())
             .padding(horizontal = 24.dp, vertical = 32.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        // Profile Image with circular shape
+        // Profile Image with edit button
         Box(
-            modifier = Modifier
-                .size(120.dp)
-                .clip(CircleShape)
-                .background(Color.Gray.copy(alpha = 0.3f)),
-            contentAlignment = Alignment.Center
+            modifier = Modifier.size(120.dp)
         ) {
-            Image(
-                painter = painterResource(id = R.drawable.placeholder_pfp),
-                contentDescription = "Profile Picture",
+            // Profile Image with circular shape
+            Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .clip(CircleShape),
-                contentScale = ContentScale.Crop
-            )
+                    .clip(CircleShape)
+                    .background(Color.Gray.copy(alpha = 0.3f)),
+                contentAlignment = Alignment.Center
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.placeholder_pfp),
+                    contentDescription = "Profile Picture",
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .clip(CircleShape),
+                    contentScale = ContentScale.Crop
+                )
+            }
+
+            // Edit button with pencil icon
+            Box(
+                modifier = Modifier
+                    .size(32.dp)
+                    .align(Alignment.BottomEnd)
+                    .clip(CircleShape)
+                    .background(Color(0xFFFF6B35)),
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.baseline_create_24),
+                    contentDescription = "Edit Profile",
+                    tint = Color.White,
+                    modifier = Modifier.size(16.dp)
+                )
+            }
         }
 
         Spacer(modifier = Modifier.height(24.dp))
@@ -106,6 +132,27 @@ fun ProfileScreen(
                 label = "Password",
                 value = password,
                 isPassword = true
+            )
+        }
+
+        Spacer(modifier = Modifier.height(32.dp))
+
+        // Edit Button
+        Button(
+            onClick = onEditProfile,
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(56.dp),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = Color(0xFFFF6B35)
+            ),
+            shape = RoundedCornerShape(12.dp)
+        ) {
+            Text(
+                text = "Edit",
+                color = Color.White,
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Medium
             )
         }
     }

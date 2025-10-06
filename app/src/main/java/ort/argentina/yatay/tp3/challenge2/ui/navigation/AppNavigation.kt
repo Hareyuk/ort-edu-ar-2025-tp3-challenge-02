@@ -13,6 +13,7 @@ import ort.argentina.yatay.tp3.challenge2.ui.screens.SearchScreen
 import ort.argentina.yatay.tp3.challenge2.ui.screens.StoreScreen
 import ort.argentina.yatay.tp3.challenge2.ui.screens.CartScreen
 import ort.argentina.yatay.tp3.challenge2.ui.screens.ProfileScreen
+import ort.argentina.yatay.tp3.challenge2.ui.screens.EditProfileScreen
 import ort.argentina.yatay.tp3.challenge2.ui.screens.SettingsScreen
 import ort.argentina.yatay.tp3.challenge2.ui.screens.FavoritesScreen
 
@@ -23,16 +24,40 @@ fun AppNavigation() {
     var showMenu by remember { mutableStateOf(false) }
     var showSettings by remember { mutableStateOf(false) }
     var showFavorites by remember { mutableStateOf(false) }
+    var showEditProfile by remember { mutableStateOf(false) }
+
+    // Estados para los datos del perfil
+    var userName by remember { mutableStateOf("User") }
+    var userJob by remember { mutableStateOf("User's job") }
+    var email by remember { mutableStateOf("xxx@gmail.com") }
+    var phoneNumber by remember { mutableStateOf("+548312315") }
+    var website by remember { mutableStateOf("www.google.com") }
+    var password by remember { mutableStateOf("xxxxxxxxxxxx") }
+
+    // Determinar si debemos mostrar el botón de regreso
+    val showBackButton = showSettings || showFavorites || selectedTab == 4 || showEditProfile
+
+    // Función para regresar a la pantalla principal
+    val onBackClick = {
+        when {
+            showEditProfile -> showEditProfile = false
+            showSettings -> showSettings = false
+            showFavorites -> showFavorites = false
+            selectedTab == 4 -> selectedTab = 0 // Regresar a Home desde Profile
+        }
+    }
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {
             ShopListTopAppBar(
-                onMenuClick = { showMenu = true }
+                onMenuClick = { showMenu = true },
+                showBackButton = showBackButton,
+                onBackClick = onBackClick
             )
         },
         bottomBar = {
-            if (!showSettings && !showFavorites) {
+            if (!showSettings && !showFavorites && !showEditProfile) {
                 BottomNavigationBar(
                     selectedTab = selectedTab,
                     onTabSelected = { selectedTab = it }
@@ -42,6 +67,25 @@ fun AppNavigation() {
     ) { paddingValues ->
         // Navegación entre pantallas
         when {
+            showEditProfile -> EditProfileScreen(
+                paddingValues = paddingValues,
+                initialUserName = userName,
+                initialUserJob = userJob,
+                initialEmail = email,
+                initialPhoneNumber = phoneNumber,
+                initialWebsite = website,
+                initialPassword = password,
+                onSave = { newName, newJob, newEmail, newPhone, newWebsite, newPassword ->
+                    userName = newName
+                    userJob = newJob
+                    email = newEmail
+                    phoneNumber = newPhone
+                    website = newWebsite
+                    password = newPassword
+                    showEditProfile = false
+                },
+                onCancel = { showEditProfile = false }
+            )
             showSettings -> SettingsScreen(paddingValues)
             showFavorites -> FavoritesScreen(paddingValues)
             else -> {
@@ -50,7 +94,16 @@ fun AppNavigation() {
                     1 -> SearchScreen(paddingValues)
                     2 -> StoreScreen(paddingValues)
                     3 -> CartScreen(paddingValues)
-                    4 -> ProfileScreen(paddingValues)
+                    4 -> ProfileScreen(
+                        paddingValues = paddingValues,
+                        userName = userName,
+                        userJob = userJob,
+                        email = email,
+                        phoneNumber = phoneNumber,
+                        website = website,
+                        password = password,
+                        onEditProfile = { showEditProfile = true }
+                    )
                 }
             }
         }
