@@ -16,6 +16,7 @@ import ort.argentina.yatay.tp3.challenge2.ui.screens.ProfileScreen
 import ort.argentina.yatay.tp3.challenge2.ui.screens.EditProfileScreen
 import ort.argentina.yatay.tp3.challenge2.ui.screens.SettingsScreen
 import ort.argentina.yatay.tp3.challenge2.ui.screens.FavoritesScreen
+import ort.argentina.yatay.tp3.challenge2.ui.screens.SelectInfoProductScreen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -25,6 +26,7 @@ fun AppNavigation() {
     var showSettings by remember { mutableStateOf(false) }
     var showFavorites by remember { mutableStateOf(false) }
     var showEditProfile by remember { mutableStateOf(false) }
+    var showSelectProductInfo by remember { mutableStateOf(false) }
 
     // Estados para los datos del perfil
     var userName by remember { mutableStateOf("User") }
@@ -35,11 +37,12 @@ fun AppNavigation() {
     var password by remember { mutableStateOf("xxxxxxxxxxxx") }
 
     // Determinar si debemos mostrar el botón de regreso
-    val showBackButton = showSettings || showFavorites || selectedTab == 4 || showEditProfile
+    val showBackButton = showSettings || showFavorites || selectedTab == 4 || showEditProfile || showSelectProductInfo
 
     // Función para regresar a la pantalla principal
     val onBackClick = {
         when {
+            showSelectProductInfo -> showSelectProductInfo = false
             showEditProfile -> showEditProfile = false
             showSettings -> showSettings = false
             showFavorites -> showFavorites = false
@@ -57,7 +60,7 @@ fun AppNavigation() {
             )
         },
         bottomBar = {
-            if (!showSettings && !showFavorites && !showEditProfile) {
+            if (!showSettings && !showFavorites && !showEditProfile && !showSelectProductInfo) {
                 BottomNavigationBar(
                     selectedTab = selectedTab,
                     onTabSelected = { selectedTab = it }
@@ -88,9 +91,21 @@ fun AppNavigation() {
             )
             showSettings -> SettingsScreen(paddingValues)
             showFavorites -> FavoritesScreen(paddingValues)
+            showSelectProductInfo -> SelectInfoProductScreen(
+                paddingValues = paddingValues,
+                onBack = { showSelectProductInfo = false },
+                onBuy = { size, count ->
+                    // Aquí puedes agregar lógica para manejar la compra
+                    showSelectProductInfo = false
+                    selectedTab = 3 // Ir al carrito después de comprar
+                }
+            )
             else -> {
                 when (selectedTab) {
-                    0 -> HomeScreen(paddingValues)
+                    0 -> HomeScreen(
+                        paddingValues = paddingValues,
+                        onProductBuy = { showSelectProductInfo = true }
+                    )
                     1 -> SearchScreen(paddingValues)
                     2 -> StoreScreen(paddingValues)
                     3 -> CartScreen(paddingValues)

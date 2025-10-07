@@ -14,7 +14,10 @@ import ort.argentina.yatay.tp3.challenge2.ui.components.ProductCard
 import ort.argentina.yatay.tp3.challenge2.data.FavoritesManager
 
 @Composable
-fun HomeScreen(paddingValues: PaddingValues) {
+fun HomeScreen(
+    paddingValues: PaddingValues,
+    onProductBuy: () -> Unit = {}
+) {
     // Lista de productos de ejemplo
     val products = listOf(
         ProductData(
@@ -64,7 +67,7 @@ fun HomeScreen(paddingValues: PaddingValues) {
                     FavoritesManager.addToFavorites(product)
                 },
                 onBuy = {
-                    // TODO: Implementar lógica de compra
+                    onProductBuy()
                 }
             )
         }
